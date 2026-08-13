@@ -11,8 +11,8 @@ class Settings(BaseSettings):
     TEMPERATURE: float = Field(default=0.0)
 
     # Database Settings
-    DATABASE_URL: str = Field(default="sqlite:///./inventory.db")
-    CHECKPOINTS_DB_PATH: str = Field(default="./checkpoints.sqlite")
+    DATABASE_URL: str = Field(default="sqlite:////tmp/inventory.db" if os.environ.get("VERCEL") else "sqlite:///./inventory.db")
+    CHECKPOINTS_DB_PATH: str = Field(default="/tmp/checkpoints.sqlite" if os.environ.get("VERCEL") else "./checkpoints.sqlite")
     MAX_QUERY_ROWS: int = Field(default=100)
     QUERY_TIMEOUT_SECONDS: int = Field(default=10)
 

@@ -70,6 +70,11 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 # Health and Readiness endpoints
+@app.get("/", tags=["System"])
+def root_endpoint():
+    return {"status": "healthy", "service": "inventory-sql-ai-chatbot", "version": "1.0.0"}
+
+
 @app.get("/health", tags=["System"])
 def health_check():
     return {"status": "healthy", "service": "inventory-sql-ai-chatbot", "version": "1.0.0"}
