@@ -1,8 +1,11 @@
+import os
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.config import settings
 
 DATABASE_URL = settings.DATABASE_URL
+if os.environ.get("VERCEL") and DATABASE_URL.startswith("sqlite") and ("./" in DATABASE_URL or not DATABASE_URL.startswith("sqlite:////")):
+    DATABASE_URL = "sqlite:////tmp/inventory.db"
 
 # Setup connect_args for SQLite
 connect_args = {}
