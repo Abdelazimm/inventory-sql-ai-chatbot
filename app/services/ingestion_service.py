@@ -1,6 +1,6 @@
 import io
+import csv
 from typing import Dict, Any, List, Tuple
-import pandas as pd
 from sqlalchemy.orm import Session
 from app.database.models import Asset, Vendor, Item, Site, Location, Customer
 
@@ -45,6 +45,14 @@ ENTITY_SCHEMAS = {
 }
 
 
+def _read_csv_dicts(file_content: bytes) -> tuple[List[str], List[Dict[str, Any]]]:
+    text_content = file_content.decode("utf-8-sig", errors="replace")
+    reader = csv.DictReader(io.StringIO(text_content))
+    columns = reader.fieldnames or []
+    rows = [row for row in reader]
+    return list(columns), rows
+
+
 class IngestionService:
     @staticmethod
     def preview_csv(file_content: bytes, entity_type: str) -> Dict[str, Any]:
@@ -55,20 +63,18 @@ class IngestionService:
         schema_info = ENTITY_SCHEMAS[entity_key]
         
         try:
-            df = pd.read_csv(io.BytesIO(file_content))
+            cols, rows = _read_csv_dicts(file_content)
         except Exception as e:
             raise ValueError(f"Failed to parse CSV file: {str(e)}")
             
         # Check column presence
-        missing_required = [col for col in schema_info["required_columns"] if col not in df.columns]
-        
-        preview_rows = df.head(10).fillna("").to_dict(orient="records")
-        total_rows = len(df)
+        missing_required = [col for col in schema_info["required_columns"] if col not in cols]
+        preview_rows = rows[:10]
         
         return {
             "entity_type": entity_key,
-            "total_rows": total_rows,
-            "columns_found": list(df.columns),
+            "total_rows": len(rows),
+            "columns_found": cols,
             "missing_required_columns": missing_required,
             "is_valid": len(missing_required) == 0,
             "preview": preview_rows
@@ -84,8 +90,8 @@ class IngestionService:
         model_cls = schema_info["model"]
         pk_field = schema_info["pk"]
         
-        df = pd.read_csv(io.BytesIO(file_content))
-        missing = [col for col in schema_info["required_columns"] if col not in df.columns]
+        cols, rows = _read_csv_dicts(file_content)
+        missing = [col for col in schema_info["required_columns"] if col not in cols]
         if missing:
             raise ValueError(f"Missing required columns: {missing}")
             
@@ -96,8 +102,8 @@ class IngestionService:
         
         # Ingestion transaction
         try:
-            for idx, row in df.iterrows():
-                row_dict = {k: (None if pd.isna(v) else v) for k, v in row.items()}
+            for idx, row in enumerate(rows):
+                row_dict = {k: (v.strip() if isinstance(v, str) and v.strip() != "" else None) for k, v in row.items()}
                 pk_val = row_dict.get(pk_field)
                 
                 if not pk_val:
@@ -123,7 +129,7 @@ class IngestionService:
             db.commit()
             return {
                 "entity_type": entity_key,
-                "total_processed": len(df),
+                "total_processed": len(rows),
                 "inserted": inserted,
                 "updated": updated,
                 "rejected": rejected,
