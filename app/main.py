@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from app.config import settings
 from app.database.connection import engine, Base
+from app.database.seeder import seed_database_if_empty
 from app.api.routes import auth, chat, sessions, ingest, mutations
 
 # Configure structured logging
@@ -24,7 +25,8 @@ async def lifespan(app: FastAPI):
     # Initialize database tables on startup
     try:
         Base.metadata.create_all(bind=engine)
-        logger.info("Database schema initialized successfully.")
+        seed_database_if_empty()
+        logger.info("Database schema initialized and seeded successfully.")
     except Exception as e:
         logger.error(f"Error initializing database schema: {e}")
     yield
