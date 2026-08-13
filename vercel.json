@@ -1,0 +1,38 @@
+{
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
+    {
+      "source": "/auth/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/chat/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/sessions/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/ingest/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/mutations/:path*",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/docs",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/openapi.json",
+      "destination": "/api/index.py"
+    }
+  ]
+}
