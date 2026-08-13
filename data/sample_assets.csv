@@ -1,0 +1,5 @@
+AssetTag,AssetName,SiteId,LocationId,SerialNumber,Category,Status,Cost,PurchaseDate,VendorId
+TAG-2001,MacBook Pro 16 M3,1,2,SN889900,Electronics,Active,2499.00,2025-04-01,2
+TAG-2002,Dell XPS 15,2,3,SN445566,Electronics,Active,1899.00,2025-04-05,1
+TAG-2003,Steelcase Gesture Chair,1,1,SN113355,Furniture,Active,1150.00,2025-04-10,3
+TAG-2004,Sony WH-1000XM5 Headset,3,5,SN992211,Accessories,Active,399.00,2025-04-12,2
