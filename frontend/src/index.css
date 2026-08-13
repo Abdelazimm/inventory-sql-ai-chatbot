@@ -29,14 +29,14 @@
   padding: 0;
 }
 
-body {
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.5;
-  overflow: hidden;
-  height: 100vh;
-  width: 100vw;
 }
 
 code, pre {
@@ -82,6 +82,7 @@ code, pre {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
   outline: none;
+  white-space: nowrap;
 }
 
 .btn-primary {
@@ -102,6 +103,23 @@ code, pre {
 }
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -139,4 +157,77 @@ code, pre {
 
 .animate-fade-in {
   animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Responsive Mobile Layouts */
+.mobile-only {
+  display: none !important;
+}
+
+.desktop-only {
+  display: flex !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: inline-flex !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+
+  .header-container {
+    padding: 10px 14px !important;
+  }
+
+  .header-title-text {
+    font-size: 15px !important;
+  }
+
+  .header-subtitle-text {
+    display: none !important;
+  }
+
+  .sidebar-drawer {
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 280px !important;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.7);
+  }
+
+  .sidebar-drawer.drawer-open {
+    transform: translateX(0) !important;
+  }
+
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+
+  .chat-scroll-padding {
+    padding: 14px 12px !important;
+  }
+
+  .chat-message-bubble {
+    max-width: 95% !important;
+    gap: 8px !important;
+  }
+
+  .chat-input-wrapper {
+    padding: 10px 12px !important;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
